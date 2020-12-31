@@ -55,6 +55,12 @@ def is_digit_or_letter(ch):
     return False
 
 
+def dump_checksum(checksum_str):
+    with open('/tmp/toyc.lex', 'w') as file:
+        file.write(checksum_str)
+        file.close()
+
+
 def read_line(line, lineno):
     num = len(line)
     inx = 0
@@ -120,8 +126,11 @@ def read_line(line, lineno):
                 col_b = col_b + 2
                 continue
             else:
-                logger.error("tokenization failed at line:%d, column:%d" %
-                             (lineno, col_b + 1))
+                err_str = "tokenization failed at line:%d, column:%d" % (
+                    lineno, col_b + 1)
+                if tu.CHECK_FLAG_LEX:
+                    dump_checksum(err_str)
+                logger.error(err_str)
                 sys.exit()
 
         # keywrod/identifier/constant
@@ -153,22 +162,29 @@ def read_line(line, lineno):
             continue
 
         # unrecoginized token
-        logger.error("unrecognized token at line:%d, column:%d" %
-                     (lineno, col_b))
+        err_str = "unrecognized token at line:%d, column:%d" % (lineno, col_b)
+        if tu.CHECK_FLAG_LEX:
+            dump_checksum(err_str)
+        logger.error(err_str)
         sys.exit()
 
 
 def dump_tokens():
+    tokens_str = ""
     logger.debug("%d tokens:" % len(tu.toks))
     inx = 0
     for tok in tu.toks:
+        tok_info = ''
         if tok[0] == Token.VAR:
-            logger.debug("%d-th token: %s, %s, (%d,%d,%d,%d)" %
-                         (inx, tok[0].name, tok[1], tok[2], tok[3], tok[4], tok[5]))
+            tok_info = "%d-th token: %s, %s, (%d,%d,%d,%d)" % (
+                inx, tok[0].name, tok[1], tok[2], tok[3], tok[4], tok[5])
         else:
-            logger.debug("%d-th token: %s, (%d,%d,%d,%d)" %
-                         (inx, tok[0].name, tok[2], tok[3], tok[4], tok[5]))
+            tok_info = "%d-th token: %s, (%d,%d,%d,%d)" % (inx,
+                                                           tok[0].name, tok[2], tok[3], tok[4], tok[5])
+        logger.debug(tok_info)
+        tokens_str += tok_info + '\t'
         inx = inx + 1
+    return tokens_str
 
 
 def lex():
@@ -186,4 +202,14 @@ def lex():
     # dump all the tokens
     logger.debug(SUBPHASE_TAG_STR)
     logger.debug('Get all the tokens')
-    dump_tokens()
+    tokens_str = dump_tokens()
+
+    # generate the checksum and dump it
+    if tu.CHECK_FLAG_LEX:
+        import hashlib
+        tokens_checksum = hashlib.md5(
+            tokens_str.encode('utf-8')).hexdigest()
+        dump_checksum(tokens_checksum)
+
+    # finish
+    logger.info('Done')

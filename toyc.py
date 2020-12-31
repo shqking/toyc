@@ -14,7 +14,7 @@ import backend
 def main():
     '''
     Command Option: 
-        python toyc.py [--opt] -i src.c
+        python toyc.py [--opt] -i src.c [--check=type]
         Input: src.c
         Output: assembly->src.c.S, logfile->src.c.LOG
     '''
@@ -24,6 +24,10 @@ def main():
                             dest='src_file', help='Input source code')
     arg_parser.add_argument('--opt', default=False, action='store_true',
                             dest='opt_flag', help='Use optimization passes')
+    arg_parser.add_argument('--chk', dest='check_flag', type=int,
+                            choices = [1,2,3,4,5,6,7],
+                            help="Unit test usage: generate the checksum of each phase's result. \
+                                1: token, 2: ast, 3: cfg, 4: symtab, 5: call graph, 6: passes, 7: codegen")
 
     # get options
     args = arg_parser.parse_args()
@@ -47,6 +51,7 @@ def main():
     tu.as_file_name = tu.src_file_name + '.S'
     tu.log_file_name = tu.src_file_name + '.LOG'
     tu.init_logger()
+    tu.init_check_flag(args.check_flag)
 
     # dump the configuration details
     logger.info(PHASE_TAG_STR)
