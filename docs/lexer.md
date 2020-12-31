@@ -1,8 +1,6 @@
 #### Lexer
 
-The following tokens are supported currently. 
-
-See `tok.py` and `lexer.py` for more details.
+Since only a subset of C can be handled by `toyc`, a small number of tokens are defined as below:
 
 ```bash
 # Keywords: int, if, while, for, break, return, continue, else
@@ -48,9 +46,7 @@ CONST_VAL: [0-9]+ # only decimal integers are supported.
 VAR: [0-9, a-z, A-Z]+	# exclude Keywords and CONST_VAL
 ```
 
-
-
-Take `test/fib.c` as an example. The following tokens can be produced.
+Take `test/fib.c` as an example. Lexer of `toyc` would tokenize it and generate the following tokens.
 
 ```bash
 Get all the tokens
@@ -99,4 +95,6 @@ Get all the tokens
 41-th token: SIGN_SEMICOLON, (8,8,43,43)
 42-th token: SIGN_RIGHT_BRACE, (9,9,1,1)
 ```
+
+Please refer to `tok.py` and `lexer.py` for more details.
 
