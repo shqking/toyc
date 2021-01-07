@@ -9,7 +9,7 @@ from tok import Token
 '''
     token = (token_type, content, row_begin, row_end, col_begin, col_end)
     token_type: enum
-    content: currently valid for identifier; None otherwise
+    content: currently valid for identifier and constants; None otherwise
 '''
 
 single_char_tok_map = {
@@ -126,7 +126,7 @@ def read_line(line, lineno):
                 col_b = col_b + 2
                 continue
             else:
-                err_str = "tokenization failed at line:%d, column:%d" % (
+                err_str = "tokenization failed at line:%d, column:%d. '!=' is expected." % (
                     lineno, col_b + 1)
                 if tu.CHECK_FLAG_LEX:
                     dump_checksum(err_str)
@@ -152,7 +152,7 @@ def read_line(line, lineno):
                          lineno, prev_col_b, col_b - 1]
             elif tok_str.isdigit():
                 token_type = Token.CONST_VAL
-                token = [token_type, None, lineno,
+                token = [token_type, int(tok_str), lineno,
                          lineno, prev_col_b, col_b - 1]
             else:
                 token_type = Token.VAR
@@ -177,6 +177,9 @@ def dump_tokens():
         tok_info = ''
         if tok[0] == Token.VAR:
             tok_info = "%d-th token: %s, %s, (%d,%d,%d,%d)" % (
+                inx, tok[0].name, tok[1], tok[2], tok[3], tok[4], tok[5])
+        elif tok[0] == Token.CONST_VAL:
+            tok_info = "%d-th token: %s, %d, (%d,%d,%d,%d)" % (
                 inx, tok[0].name, tok[1], tok[2], tok[3], tok[4], tok[5])
         else:
             tok_info = "%d-th token: %s, (%d,%d,%d,%d)" % (inx,
@@ -209,6 +212,7 @@ def lex():
         import hashlib
         tokens_checksum = hashlib.md5(
             tokens_str.encode('utf-8')).hexdigest()
+        logger.debug("token checksum:%s" % tokens_checksum)
         dump_checksum(tokens_checksum)
 
     # finish

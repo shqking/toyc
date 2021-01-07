@@ -70,4 +70,4 @@ A simple test framework is provided to check the correctness of every stage of `
 
 ------
 
-Please raise issues if you have any question. Thanks :)
+Please feel free to raise issues if you have any question. Thanks :)
