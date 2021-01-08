@@ -24,7 +24,7 @@ def main():
                             dest='src_file', help='Input source code')
     arg_parser.add_argument('--opt', default=False, action='store_true',
                             dest='opt_flag', help='Use optimization passes')
-    arg_parser.add_argument('--chk', dest='check_flag', type=int,
+    arg_parser.add_argument('--chk', dest='check_flag', type=int, default=0,
                             choices=[1, 2, 3, 4, 5, 6, 7],
                             help="Unit test usage: generate the checksum of each phase's result. \
                                 PHASE can be 1: token, 2: ast, 3: cfg, 4: symtab, 5: call graph, \
@@ -52,7 +52,8 @@ def main():
     tu.as_file_name = tu.src_file_name + '.S'
     tu.log_file_name = tu.src_file_name + '.LOG'
     tu.init_logger()
-    tu.init_check_flag(args.check_flag)
+    if args.check_flag != 0:
+        tu.init_check_flag(args.check_flag)
 
     # dump the configuration details
     logger.info(PHASE_TAG_STR)
@@ -61,6 +62,7 @@ def main():
     logger.info("\t Use optimization: %s" % opt_flag)
     logger.info("\t Generated assembly code: %s" % tu.as_file_name)
     logger.info("\t Log file: %s" % tu.log_file_name)
+    logger.info("\t Check flag: %d"%args.check_flag)
 
     # lexer
     logger.info(PHASE_TAG_STR)
