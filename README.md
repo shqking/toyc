@@ -64,9 +64,11 @@ TBA
 
 #### Test
 
-A simple test framework is provided to check the correctness of every stage of `toyc`. TBA
+A simple test framework is provided to check the correctness of every stage of `toyc`. See [Test](./docs/test.md)
 
-
+```shell
+python3 test/test.py --src $PATH_TO_TOYC
+```
 
 ------
 
