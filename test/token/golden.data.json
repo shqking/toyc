@@ -8,3 +8,4 @@
     "bad_006.c": "tokenization failed at line:1, column:2. '!=' is expected.",
     "bad_007.c": "tokenization failed at line:1, column:2. '!=' is expected."
 }
+

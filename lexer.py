@@ -151,6 +151,7 @@ def read_line(line, lineno):
                 token = [token_type, None, lineno,
                          lineno, prev_col_b, col_b - 1]
             elif tok_str.isdigit():
+                # TODO: lexer errors should be raised for '0123'
                 token_type = Token.CONST_VAL
                 token = [token_type, int(tok_str), lineno,
                          lineno, prev_col_b, col_b - 1]
