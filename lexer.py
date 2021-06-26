@@ -171,7 +171,7 @@ def read_line(line, lineno):
         sys.exit()
 
 
-def get_token_info(tok, is_raw):
+def get_token_info(tok, is_raw=False):
     tok_info = ''
     if is_raw:
         if tok[0] == Token.VAR:
