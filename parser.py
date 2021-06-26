@@ -228,7 +228,7 @@ def parse_def(type, is_global):
             MOVE_NEXT()
 
             cst = GET_TOK(Token.CONST_VAL)
-            _ = GET_TOK(Token.SIGN_LEFT_BRACKET)
+            _ = GET_TOK(Token.SIGN_RIGHT_BRACKET)
             _ = GET_TOK(Token.SIGN_SEMICOLON)
 
             return NEW_NODE([ASTNode.DEF_ARRAY, type, var, is_global, cst])
@@ -327,7 +327,7 @@ def parse_stmtlist():
         _ = GET_TOK(Token.SIGN_RIGHT_PARENTHESIS)
         body = parse_block()
 
-        while_stmt = NEW_NODE([ASTNode.STMT_FOR, cond_expr, body])
+        while_stmt = NEW_NODE([ASTNode.STMT_WHILE, cond_expr, body])
         next = parse_stmtlist()
         return NEW_NODE([ASTNode.STMTLIST, while_stmt, next])
     elif CUR_TOK_TYPE() == Token.SIGN_SEMICOLON:
