@@ -27,8 +27,8 @@ stmt        : altexpr ; | KW_BREAK ; | KW_CONTINUE ; | KW_RETURN expr ;
 
 ifstmt      : KW_IF ( expr ) block elsestmt
 elsestmt    : KW_ELSE block | nil
-forstmt     : KW_FOR ( alexpr ; altexpr ; altexpr ) { block }
-whilestmt   : KW_WHILE ( expr ) { block }
+forstmt     : KW_FOR ( expr ; expr ; expr )  block
+whilestmt   : KW_WHILE ( expr ) block
 
 # Expressions
 # Note: priority should be considered
@@ -90,7 +90,7 @@ int foo(int a) {
     	;
     }
     
-    for(a = 4; a > 10; ) {
+    for(a = 4; a > 10; a = a + 1) {
     	a = a + 1;
     }
     
