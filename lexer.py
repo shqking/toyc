@@ -55,6 +55,7 @@ def is_digit_or_letter(ch):
     return False
 
 
+# TODO: move this helper to tu.py as common code
 def dump_checksum(checksum_str):
     with open('/tmp/toyc.lex', 'w') as file:
         file.write(checksum_str)
@@ -170,23 +171,39 @@ def read_line(line, lineno):
         sys.exit()
 
 
+def get_token_info(tok, is_raw):
+    tok_info = ''
+    if is_raw:
+        if tok[0] == Token.VAR:
+            tok_info = "%s, %s, (%d,%d,%d,%d)" % (
+                tok[0].name, tok[1], tok[2], tok[3], tok[4], tok[5])
+        elif tok[0] == Token.CONST_VAL:
+            tok_info = "%s, %d, (%d,%d,%d,%d)" % (
+                tok[0].name, tok[1], tok[2], tok[3], tok[4], tok[5])
+        else:
+            tok_info = "%s, (%d,%d,%d,%d)" % (
+                tok[0].name, tok[2], tok[3], tok[4], tok[5])
+    else:
+        if tok[0] == Token.VAR:
+            tok_info = "%s, %s" % (tok[0].name, tok[1])
+        elif tok[0] == Token.CONST_VAL:
+            tok_info = "%s, %d" % (tok[0].name, tok[1])
+        else:
+            tok_info = "%s" % (tok[0].name)
+
+    return tok_info
+
+
 def dump_tokens():
     tokens_str = ""
     logger.debug("%d tokens:" % len(tu.toks))
     inx = 0
     for tok in tu.toks:
-        tok_info = ''
-        if tok[0] == Token.VAR:
-            tok_info = "%d-th token: %s, %s, (%d,%d,%d,%d)" % (
-                inx, tok[0].name, tok[1], tok[2], tok[3], tok[4], tok[5])
-        elif tok[0] == Token.CONST_VAL:
-            tok_info = "%d-th token: %s, %d, (%d,%d,%d,%d)" % (
-                inx, tok[0].name, tok[1], tok[2], tok[3], tok[4], tok[5])
-        else:
-            tok_info = "%d-th token: %s, (%d,%d,%d,%d)" % (inx,
-                                                           tok[0].name, tok[2], tok[3], tok[4], tok[5])
-        logger.debug(tok_info)
-        tokens_str += tok_info + '\t'
+        inx_str = "%d-th token: " % (inx)
+        tok_info = get_token_info(tok, True)
+
+        logger.debug(inx_str + tok_info)
+        tokens_str += inx_str + tok_info + '\t'
         inx = inx + 1
     return tokens_str
 
